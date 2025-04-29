@@ -22,7 +22,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build and Test
-        run:    ./gradlew clean build
+        run: |
+          ./gradlew clean build \
+          -Dctrf.build.name=system-build \
+          -Dctrf.build.number=789 \
+          -Dctrf.build.url=http://system.example.com/build/
 
       - name: Publish CTRF Test Report
         uses: ctrf-io/github-test-reporter@v1.0.14
@@ -42,6 +46,14 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: always()
+
+      - name: Send Test Results to Slack (OAuth)
+        run: npx slack-ctrf results build/test-results/test/ctrf-report.json --title "Test Results" --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
+        if: always()
+
+      - name: Send Failed Tests to Slack (OAuth)
+        run: npx slack-ctrf failed build/test-results/test/ctrf-report.json --consolidated --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
+        if: failure()
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
