@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.github.alexshamrai'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.github.alexshamrai:junit-ctrf-extension:0.3.1'
+}
+
+test {
+    useJUnitPlatform()
+}
