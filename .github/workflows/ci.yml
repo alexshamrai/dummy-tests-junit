@@ -2,6 +2,11 @@ name: Build and run Unit tests
 
 on:
   workflow_dispatch:
+    inputs:
+      includedTags:
+        description: 'Tag'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -26,7 +31,8 @@ jobs:
           ./gradlew clean build \
           -Dctrf.build.name=system-build \
           -Dctrf.build.number=789 \
-          -Dctrf.build.url=http://system.example.com/build/
+          -Dctrf.build.url=http://system.example.com/build/ \
+          -PincludedTags=${{ github.event.inputs.includedTags }}
 
       - name: Publish CTRF Test Report
         uses: ctrf-io/github-test-reporter@v1.0.14
