@@ -6,7 +6,7 @@ on:
       includedTags:
         description: 'Tag'
         required: false
-        default: ''
+        default: 'fake'
 
 jobs:
   build:
@@ -26,12 +26,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build and Test
+      - name: Run Tests
         run: |
-          ./gradlew clean build \
-          -Dctrf.build.name=system-build \
-          -Dctrf.build.number=789 \
-          -Dctrf.build.url=http://system.example.com/build/ \
+          ./gradlew clean test \
+          -Dctrf.build.name=Regression \
+          -Dctrf.build.number=${{ github.run_number }} \
+          -Dctrf.build.url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \
           -PincludedTags=${{ github.event.inputs.includedTags }}
 
       - name: Publish CTRF Test Report

@@ -17,10 +17,6 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
-}
-
-test {
     systemProperties += System.properties.findAll { k, v -> k.toString().startsWith("ctrf") }
 
     useJUnitPlatform {
