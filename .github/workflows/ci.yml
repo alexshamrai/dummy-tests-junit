@@ -32,6 +32,8 @@ jobs:
           -Dctrf.build.name=Regression \
           -Dctrf.build.number=${{ github.run_number }} \
           -Dctrf.build.url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \
+          -Dctrf.branch.name=${{ github.ref_name }} \
+          -Dctrf.commit=${{ github.sha }} \
           -PincludedTags=${{ github.event.inputs.includedTags }}
 
       - name: Publish CTRF Test Report
@@ -55,21 +57,13 @@ jobs:
 
       - name: Send Test Results to Slack (OAuth)
         run: |
-          npx slack-ctrf results \
+          npx slack-ctrf custom \
             build/test-results/test/ctrf-report.json \
-            --title "Test Results" \
+            src/test/resources/ctrf-markdown.hbs \
+            --markdown \
             --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" \
             --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
         if: always()
-
-      - name: Send Failed Tests to Slack (OAuth)
-        run: |
-          npx slack-ctrf failed \
-            build/test-results/test/ctrf-report.json \
-            --consolidated \
-            --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" \
-            --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
-        if: failure()
 
       - name: Upload test results
         uses: actions/upload-artifact@v4

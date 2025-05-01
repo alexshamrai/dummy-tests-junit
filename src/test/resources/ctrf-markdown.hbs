@@ -1,0 +1,35 @@
+:rocket: *{{ctrf.environment.buildName}}* :rocket:
+<{{ctrf.environment.buildUrl}}|Run - {{ctrf.environment.buildName}} {{ctrf.environment.buildNumber}}>
+
+:bar_chart: *Test Summary*
+:pencil: Total: `{{ctrf.summary.tests}}`
+:white_check_mark: Passed: `{{ctrf.summary.passed}}` | :x: Failed: `{{ctrf.summary.failed}}` | :fast_forward: Skipped: `{{ctrf.summary.skipped}}`
+:stopwatch: Duration: `{{formatDurationMs (subtract ctrf.summary.stop ctrf.summary.start)}}`
+
+{{#if ctrf.summary.failed}}
+:rotating_light: *Failed Tests* :rotating_light:
+{{#each ctrf.tests}}
+{{#if (eq this.status "failed")}}
+*{{this.name}}*
+Duration: `{{formatDurationMs this.duration}}`
+Error:
+```
+{{this.message}}
+```
+{{/if}}
+{{/each}}
+{{/if}}
+
+{{#if ctrf.summary.flaky}}
+::leaves:: *Flaky Tests* ::leaves::
+{{#each ctrf.tests}}
+{{#if this.flaky}}
+*{{this.name}}*
+Duration: {{formatDurationMs this.duration}}
+{{/if}}
+{{/each}}
+{{/if}}
+
+:card_index_dividers: *Test repo details* :card_index_dividers:
+Branch: <https://github.com/alexshamrai/dummy-tests-junit/tree/{{ctrf.environment.branchName}}|{{ctrf.environment.branchName}}>
+SHA: <https://github.com/alexshamrai/dummy-tests-junit/commit/{{ctrf.environment.commit}}|{{ctrf.environment.commit}}>
