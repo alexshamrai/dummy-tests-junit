@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Tag("dummy")
+@Tag("success")
 public class DummySuccessTest extends BaseFakeTest {
 
     @Test
