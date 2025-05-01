@@ -54,11 +54,21 @@ jobs:
         if: always()
 
       - name: Send Test Results to Slack (OAuth)
-        run: npx slack-ctrf results build/test-results/test/ctrf-report.json --title "Test Results" --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
+        run: |
+          npx slack-ctrf results \
+            build/test-results/test/ctrf-report.json \
+            --title "Test Results" \
+            --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" \
+            --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
         if: always()
 
       - name: Send Failed Tests to Slack (OAuth)
-        run: npx slack-ctrf failed build/test-results/test/ctrf-report.json --consolidated --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
+        run: |
+          npx slack-ctrf failed \
+            build/test-results/test/ctrf-report.json \
+            --consolidated \
+            --oauth-token "${{ secrets.SLACK_OAUTH_TOKEN }}" \
+            --channel-id "${{ secrets.SLACK_CHANNEL_ID }}"
         if: failure()
 
       - name: Upload test results
