@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.gradle.test-retry' version '1.6.2'
 }
 
 group = 'io.github.alexshamrai'
@@ -35,6 +36,12 @@ test {
                 excludeTags(tag.trim())
             }
         }
+    }
+
+    retry {
+        maxRetries = 1
+        maxFailures = 1000
+        failOnPassedAfterRetry = false
     }
 
     testLogging {
