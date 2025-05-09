@@ -1,0 +1,89 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 6,
+      "passed": 5,
+      "failed": 1,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1765792800000,
+      "stop": 1765792820000
+    },
+    "tests": [
+      {
+        "name": "Verify user login with valid credentials",
+        "status": "passed",
+        "duration": 1839,
+        "start": 1765792801000,
+        "stop": 1765792802839,
+        "tags": ["first", "success", "fake"],
+        "filepath": "io.github.alexshamrai.FirstTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user logout functionality",
+        "status": "passed",
+        "duration": 1382,
+        "start": 1765792803000,
+        "stop": 1765792804382,
+        "tags": ["first", "success", "fake"],
+        "filepath": "io.github.alexshamrai.FirstTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user profile update",
+        "status": "passed",
+        "duration": 2101,
+        "start": 1765792805000,
+        "stop": 1765792807101,
+        "tags": ["second", "success", "fake"],
+        "filepath": "io.github.alexshamrai.SecondTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user password change",
+        "status": "passed",
+        "duration": 1768,
+        "start": 1765792808000,
+        "stop": 1765792809768,
+        "tags": ["second", "success", "fake"],
+        "filepath": "io.github.alexshamrai.SecondTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify API health check endpoint",
+        "status": "passed",
+        "duration": 1248,
+        "start": 1765792810000,
+        "stop": 1765792811248,
+        "tags": ["dummy", "success", "fake"],
+        "filepath": "io.github.alexshamrai.DummySuccessTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify expired session handling",
+        "status": "failed",
+        "duration": 3412,
+        "start": 1765792812000,
+        "stop": 1765792815412,
+        "tags": ["dummy", "failed", "fake"],
+        "filepath": "io.github.alexshamrai.DummyFailedTest",
+        "threadId": "Test worker",
+        "message": "AssertionError: expected true but was false"
+      }
+    ],
+    "environment": {
+      "buildName": "Acceptance",
+      "buildNumber": "109",
+      "buildUrl": "https://github.com/alexshamrai/dummy-tests-junit/actions/runs/12345009",
+      "commit": "0123456789012345678901234567890abcdef0",
+      "branchName": "feature/auth-fix"
+    }
+  }
+}

@@ -3,6 +3,8 @@ plugins {
     id 'org.gradle.test-retry' version '1.6.4'
 }
 
+apply from: 'gradle/send-metrics-to-elastic.gradle'
+
 group = 'io.github.alexshamrai'
 version = '1.0-SNAPSHOT'
 

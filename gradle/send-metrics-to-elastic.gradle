@@ -1,0 +1,94 @@
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.time.Duration
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.nio.charset.StandardCharsets
+
+tasks.register('sendMetricsToElastic') {
+    description = 'Sends test metrics to Elasticsearch'
+    ext.reportPath = project.findProperty('reportPath') ?: 'build/test-results/test/ctrf-report.json'
+
+    doLast {
+        final int CONNECTION_TIMEOUT_SECONDS = 10
+
+        try {
+            def reportFile = validateReportFile(reportPath)
+            def config = getElasticSearchConfig()
+            def requestData = prepareRequestData(reportFile, config)
+            sendDataToElasticsearch(requestData, CONNECTION_TIMEOUT_SECONDS)
+
+        } catch (Exception e) {
+            handleException("Failed to send metrics to Elasticsearch", e)
+        }
+    }
+}
+
+private File validateReportFile(String reportFilePath) {
+    def reportFile = file(reportFilePath)
+    if (!reportFile.exists()) {
+        def errorMsg = "CTRF report file not found at: ${reportFile.absolutePath}"
+        println errorMsg
+        throw new GradleException(errorMsg)
+    }
+    return reportFile
+}
+
+private Map getElasticSearchConfig() {
+    return [
+            elasticUrl: System.getenv('ELASTIC_URL') ?: 'http://localhost:9200',
+            apiKey    : System.getenv('ELASTIC_API_KEY') ?: '',
+            indexName : System.getenv('ELASTIC_INDEX_NAME') ?: 'dummy-test-junit'
+    ]
+}
+
+private Map prepareRequestData(File reportFile, Map config) {
+    def formattedDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    def fullUrl = "${config.elasticUrl}/${config.indexName}-${formattedDate}/_doc"
+    def jsonPayload = reportFile.text
+
+    return [
+            url: fullUrl,
+            payload: jsonPayload,
+            apiKey: config.apiKey
+    ]
+}
+
+private void sendDataToElasticsearch(Map requestData, int timeoutSeconds) {
+    def client = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(timeoutSeconds))
+            .build()
+
+    def requestBuilder = HttpRequest.newBuilder()
+            .uri(URI.create(requestData.url))
+            .header("Content-Type", "application/json; charset=UTF-8")
+            .POST(HttpRequest.BodyPublishers.ofString(requestData.payload, StandardCharsets.UTF_8))
+
+    if (requestData.apiKey) {
+        requestBuilder.header("Authorization", "ApiKey ${requestData.apiKey}")
+    }
+
+    def request = requestBuilder.build()
+    def response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+    handleResponse(response, requestData.url)
+}
+
+private void handleResponse(HttpResponse<String> response, String url) {
+    def statusCode = response.statusCode()
+    if (statusCode == 200 || statusCode == 201) {
+        println "Successfully sent test metrics to Elasticsearch at ${url}"
+    } else {
+        def errorMsg = "Failed to send metrics to Elasticsearch, HTTP error code: ${statusCode}. Response: ${response.body()}"
+        println errorMsg
+        throw new GradleException(errorMsg)
+    }
+}
+
+private void handleException(String message, Exception exception) {
+    def errorMsg = "${message}: ${exception.message}"
+    println errorMsg
+    exception.printStackTrace()
+    throw new GradleException(errorMsg)
+}

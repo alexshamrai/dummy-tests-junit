@@ -1,0 +1,108 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 8,
+      "passed": 6,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 2,
+      "other": 0,
+      "start": 1766224800000,
+      "stop": 1766224822000
+    },
+    "tests": [
+      {
+        "name": "Verify user login with valid credentials",
+        "status": "passed",
+        "duration": 2258,
+        "start": 1766224801000,
+        "stop": 1766224803258,
+        "tags": ["first", "success", "fake"],
+        "filepath": "io.github.alexshamrai.FirstTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user logout functionality",
+        "status": "passed",
+        "duration": 1692,
+        "start": 1766224804000,
+        "stop": 1766224805692,
+        "tags": ["first", "success", "fake"],
+        "filepath": "io.github.alexshamrai.FirstTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user profile update",
+        "status": "passed",
+        "duration": 3021,
+        "start": 1766224806000,
+        "stop": 1766224809021,
+        "tags": ["second", "success", "fake"],
+        "filepath": "io.github.alexshamrai.SecondTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify user password change",
+        "status": "passed",
+        "duration": 2584,
+        "start": 1766224810000,
+        "stop": 1766224812584,
+        "tags": ["second", "success", "fake"],
+        "filepath": "io.github.alexshamrai.SecondTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify API health check endpoint",
+        "status": "passed",
+        "duration": 1867,
+        "start": 1766224813000,
+        "stop": 1766224814867,
+        "tags": ["dummy", "success", "fake"],
+        "filepath": "io.github.alexshamrai.DummySuccessTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify database connection status",
+        "status": "passed",
+        "duration": 2011,
+        "start": 1766224815000,
+        "stop": 1766224817011,
+        "tags": ["dummy", "success", "fake"],
+        "filepath": "io.github.alexshamrai.DummySuccessTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify legacy system integration",
+        "status": "skipped",
+        "duration": 0,
+        "start": 1766224818000,
+        "stop": 1766224818000,
+        "tags": ["dummy", "disabled", "fake"],
+        "filepath": "io.github.alexshamrai.DummyDisabledTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify third-party service callback",
+        "status": "skipped",
+        "duration": 0,
+        "start": 1766224819000,
+        "stop": 1766224819000,
+        "tags": ["dummy", "disabled", "fake"],
+        "filepath": "io.github.alexshamrai.DummyDisabledTest",
+        "threadId": "Test worker"
+      }
+    ],
+    "environment": {
+      "buildName": "Acceptance",
+      "buildNumber": "104",
+      "buildUrl": "https://github.com/alexshamrai/dummy-tests-junit/actions/runs/12345004",
+      "commit": "d4e5f6789012345678901234567890abcdef01",
+      "branchName": "master"
+    }
+  }
+}

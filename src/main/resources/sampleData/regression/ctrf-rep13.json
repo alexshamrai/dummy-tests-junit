@@ -1,0 +1,98 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1766311200000,
+      "stop": 1766311215000
+    },
+    "tests": [
+      {
+        "name": "Verify data export to CSV format",
+        "status": "passed",
+        "duration": 1487,
+        "start": 1766311201000,
+        "stop": 1766311202487,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.FirstLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify email notification delivery",
+        "status": "passed",
+        "duration": 1089,
+        "start": 1766311203000,
+        "stop": 1766311204089,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.FirstLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify batch processing completion",
+        "status": "passed",
+        "duration": 2456,
+        "start": 1766311204500,
+        "stop": 1766311206956,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.FirstLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify report generation with large dataset",
+        "status": "passed",
+        "duration": 1578,
+        "start": 1766311207500,
+        "stop": 1766311209078,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.SecondLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify cache invalidation across nodes",
+        "status": "passed",
+        "duration": 1123,
+        "start": 1766311209500,
+        "stop": 1766311210623,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.SecondLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify full database migration",
+        "status": "passed",
+        "duration": 2587,
+        "start": 1766311211000,
+        "stop": 1766311213587,
+        "tags": ["success", "long", "fake"],
+        "filepath": "io.github.alexshamrai.SecondLongTest",
+        "threadId": "Test worker"
+      },
+      {
+        "name": "Verify external service response timeout",
+        "status": "passed",
+        "duration": 1112,
+        "start": 1766311214000,
+        "stop": 1766311215112,
+        "tags": ["flaky", "fake"],
+        "filepath": "io.github.alexshamrai.FlakyTest",
+        "threadId": "Test worker"
+      }
+    ],
+    "environment": {
+      "buildName": "Regression",
+      "buildNumber": "203",
+      "buildUrl": "https://github.com/alexshamrai/dummy-tests-junit/actions/runs/12345203",
+      "commit": "c3d4e5f6789012345678901234567890abcdef",
+      "branchName": "master"
+    }
+  }
+}

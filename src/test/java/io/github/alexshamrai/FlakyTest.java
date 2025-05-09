@@ -1,5 +1,6 @@
 package io.github.alexshamrai;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,9 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("flaky")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DisplayName("Flaky Tests")
 public class FlakyTest extends BaseFakeTest {
 
     @Test
+    @DisplayName("Verify external service response timeout")
     public void flakyTestPassesOnSecondRun() {
         File counterFile = new File("build/tmp/flakyTestCounter.txt");
         int runCounter = 1;
