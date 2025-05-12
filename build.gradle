@@ -1,10 +1,15 @@
 plugins {
     id 'java'
     id 'org.gradle.test-retry' version '1.6.2'
+    id 'application'
 }
 
 group = 'io.github.alexshamrai'
 version = '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'io.github.alexshamrai.SendMetrics'
+}
 
 repositories {
     mavenCentral()
@@ -14,7 +19,8 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'io.github.alexshamrai:junit-ctrf-extension:0.3.2'
+    implementation 'io.github.alexshamrai:junit-ctrf-extension:0.3.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 }
 
 test {
