@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import io.github.alexshamrai.ctrf.model.CtrfJson;
 import io.github.alexshamrai.ctrf.model.Summary;
@@ -31,20 +34,8 @@ public class SendMetrics {
 
             // Extract metrics from the parsed report
             Summary summary = report.getResults().getSummary();
-            int passed = summary.getPassed();
-            int failed = summary.getFailed();
-            int skipped = summary.getSkipped();
-            long start = summary.getStart();
-            long stop = summary.getStop();
-            long duration = stop - start;
 
-            // Print metrics to stdout
-            System.out.println("test_total_passed " + passed);
-            System.out.println("test_total_failed " + failed);
-            System.out.println("test_total_skipped " + skipped);
-            System.out.println("duration " + duration);
-
-            // Define labels
+            // Define labels (not currently used but kept for future reference)
             String runId = report.getResults().getEnvironment().getBuildNumber();
             String buildName = report.getResults().getEnvironment().getBuildName();
 
@@ -59,27 +50,30 @@ public class SendMetrics {
         }
     }
 
-    private static void sendToElasticsearch(Summary summary) throws IOException {
+    private static void sendToElasticsearch(Summary summary) throws IOException, InterruptedException {
         // Create JSON payload for Elasticsearch
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonPayload = objectMapper.writeValueAsString(summary);
 
-        // Send data to Elasticsearch
-        URL url = new URL(ELASTICSEARCH_URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        conn.setDoOutput(true);
+        // Create HTTP client
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
 
-        try (var os = conn.getOutputStream()) {
-            os.write(jsonPayload.getBytes(StandardCharsets.UTF_8));
+        // Create HTTP request
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(ELASTICSEARCH_URL))
+                .header("Content-Type", "application/json; charset=UTF-8")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonPayload, StandardCharsets.UTF_8))
+                .build();
+
+        // Send request and get response
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Check response status
+        int statusCode = response.statusCode();
+        if (statusCode != 200 && statusCode != 201) {
+            throw new IOException("Failed to send test summary to Elasticsearch, HTTP error code: " + statusCode);
         }
-
-        int responseCode = conn.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_CREATED) {
-            throw new IOException("Failed to send test summary to Elasticsearch, HTTP error code: " + responseCode);
-        }
-
-        conn.disconnect();
     }
 }
