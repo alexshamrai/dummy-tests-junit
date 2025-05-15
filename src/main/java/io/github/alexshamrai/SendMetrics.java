@@ -11,6 +11,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import io.github.alexshamrai.ctrf.model.CtrfJson;
 import io.github.alexshamrai.ctrf.model.Environment;
@@ -19,7 +21,9 @@ import io.github.alexshamrai.ctrf.model.Summary;
 
 public class SendMetrics {
     private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
-    private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results/_doc";
+    private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
+                                                    LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
+                                                    "/_doc";
 
     public static void main(String[] args) {
         try {
@@ -32,12 +36,9 @@ public class SendMetrics {
             ObjectMapper objectMapper = new ObjectMapper();
             CtrfJson report = objectMapper.readValue(reportFile, CtrfJson.class);
 
-            // Send individual components to the same Elasticsearch index
-            sendToElasticsearch(report.getResults().getSummary());
             sendToElasticsearch(report);
-            sendToElasticsearch(report.getResults().getEnvironment());
 
-            System.out.println("Test report components sent to Elasticsearch successfully.");
+            System.out.println("Test report sent to Elasticsearch successfully.");
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
