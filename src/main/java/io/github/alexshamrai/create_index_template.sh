@@ -1,6 +1,12 @@
 curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-Type: application/json" -d '{
   "index_patterns": ["test_results*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "mapping.nested_objects.limit": 50
+  },
   "mappings": {
+    "dynamic": "strict",
     "properties": {
       "reportFormat": {"type": "keyword"},
       "specVersion": {"type": "keyword"},
@@ -10,7 +16,8 @@ curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-
           "tool": {
             "type": "object",
             "properties": {
-              "name": {"type": "keyword"}
+              "name": {"type": "keyword"},
+              "version": {"type": "keyword"}
             }
           },
           "summary": {
@@ -23,22 +30,37 @@ curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-
               "skipped": {"type": "integer"},
               "other": {"type": "integer"},
               "start": {"type": "long"},
-              "stop": {"type": "long"}
+              "stop": {"type": "long"},
+              "duration": {"type": "integer"}
             }
           },
           "tests": {
             "type": "nested",
+            "include_in_parent": true,
+            "dynamic": "strict",
             "properties": {
               "name": {"type": "keyword"},
               "status": {"type": "keyword"},
               "duration": {"type": "integer"},
               "start": {"type": "long"},
               "stop": {"type": "long"},
-              "message": {"type": "text"},
-              "trace": {"type": "text"},
+              "message": {
+                "type": "text",
+                "fields": {
+                  "keyword": {"type": "keyword", "ignore_above": 256}
+                }
+              },
+              "trace": {
+                "type": "text",
+                "fields": {
+                  "keyword": {"type": "keyword", "ignore_above": 256}
+                }
+              },
               "tags": {"type": "keyword"},
               "filepath": {"type": "keyword"},
-              "threadId": {"type": "keyword"}
+              "threadId": {"type": "keyword"},
+              "classname": {"type": "keyword"},
+              "package": {"type": "keyword"}
             }
           }
         }

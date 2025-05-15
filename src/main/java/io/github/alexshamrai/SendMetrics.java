@@ -1,7 +1,7 @@
 package io.github.alexshamrai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 
 import io.github.alexshamrai.ctrf.model.CtrfJson;
 import io.github.alexshamrai.ctrf.model.Environment;
-import io.github.alexshamrai.ctrf.model.Results;
 import io.github.alexshamrai.ctrf.model.Summary;
 
 public class SendMetrics {
@@ -80,7 +79,7 @@ public class SendMetrics {
         // Check response status
         int statusCode = response.statusCode();
         if (statusCode != 200 && statusCode != 201) {
-            throw new IOException("Failed to send data to Elasticsearch, HTTP error code: " + statusCode);
+            throw new IOException("Failed to send data to Elasticsearch, HTTP error code: " + statusCode + response.body());
         }
     }
 }
