@@ -1,0 +1,161 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1747404401536,
+      "stop": 1747404481347
+    },
+    "tests": [
+      {
+        "name": "Publisher changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 3641,
+        "start": 1747404407658,
+        "stop": 1747404411299,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-domain-cache-server",
+          "ads-ssp-domain-api"
+        ],
+        "filepath": "com.example.integration.PublisherPropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "Line Item changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 2377,
+        "start": 1747404411345,
+        "stop": 1747404413722,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-mp-exchange-cache-server",
+          "ads-exchange-domain-api"
+        ],
+        "filepath": "com.example.integration.LineItemPropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "Endpoint changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 2317,
+        "start": 1747404413743,
+        "stop": 1747404416060,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-mp-exchange-cache-server",
+          "ads-exchange-domain-api"
+        ],
+        "filepath": "com.example.integration.EndpointPropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "DSP Account changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 2553,
+        "start": 1747404416082,
+        "stop": 1747404418635,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-mp-exchange-cache-server",
+          "ads-exchange-domain-api"
+        ],
+        "filepath": "com.example.integration.DspAccountPropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "Deal changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 2383,
+        "start": 1747404418653,
+        "stop": 1747404421036,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-mp-exchange-cache-server",
+          "ads-exchange-domain-api"
+        ],
+        "filepath": "com.example.integration.DealPropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "OMP: Banner request test",
+        "status": "passed",
+        "duration": 17207,
+        "start": 1747404407656,
+        "stop": 1747404424863,
+        "tags": [
+          "ads-api",
+          "regression",
+          "omp"
+        ],
+        "filepath": "com.example.OmpBannerTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "Bundle changes propagate to Cache Server",
+        "status": "passed",
+        "duration": 4147,
+        "start": 1747404421096,
+        "stop": 1747404425243,
+        "tags": [
+          "integration",
+          "regression",
+          "ads-domain-bundle-cache-server",
+          "ads-bundle-api"
+        ],
+        "filepath": "com.example.integration.BundlePropagationTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "OMP: Video request test",
+        "status": "passed",
+        "duration": 20426,
+        "start": 1747404424879,
+        "stop": 1747404445305,
+        "tags": [
+          "ads-api",
+          "regression",
+          "omp"
+        ],
+        "filepath": "com.example.OmpVideoTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "PMP: Programmatic guaranteed deal test",
+        "status": "passed",
+        "duration": 56085,
+        "start": 1747404425258,
+        "stop": 1747404481343,
+        "tags": [
+          "ads-api",
+          "regression",
+          "pg-deal",
+          "pmp"
+        ],
+        "filepath": "com.example.PmpPgDealTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      }
+    ],
+    "environment": {
+      "buildName": "Regression",
+      "buildNumber": "752",
+      "buildUrl": "https://github.com/example/ad-serving-automation/actions/runs/15070338114",
+      "commit": "0a692f1c05f3bd8e65a31d43e8d7a1594158ada7",
+      "branchName": "master"
+    }
+  }
+}

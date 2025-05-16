@@ -19,7 +19,8 @@ import io.github.alexshamrai.ctrf.model.Environment;
 import io.github.alexshamrai.ctrf.model.Summary;
 
 public class SendMetrics {
-    private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
+    // private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
+    private static final String REPORT_PATH = "src/main/resources/ctrf-rep1.json";
     private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
                                                     LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
                                                     "/_doc";

@@ -1,0 +1,113 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1747383719851,
+      "stop": 1747383738795
+    },
+    "tests": [
+      {
+        "name": "ads-bundle-api: check list of bundles",
+        "status": "passed",
+        "duration": 1982,
+        "start": 1747383733036,
+        "stop": 1747383735018,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.GrpcApiTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "ads-exchange-domain-api: check list of endpoints",
+        "status": "passed",
+        "duration": 842,
+        "start": 1747383735120,
+        "stop": 1747383735962,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.GrpcApiTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "ads-exchange-domain-api: check list of DSP accounts",
+        "status": "passed",
+        "duration": 572,
+        "start": 1747383736014,
+        "stop": 1747383736586,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.GrpcApiTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "Test http call to ads api",
+        "status": "passed",
+        "duration": 3728,
+        "start": 1747383733034,
+        "stop": 1747383736762,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.HttpApiTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "ads-ssp-domain-api: check list of publishers",
+        "status": "passed",
+        "duration": 960,
+        "start": 1747383736627,
+        "stop": 1747383737587,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.GrpcApiTest",
+        "threadId": "ForkJoinPool-1-worker-2"
+      },
+      {
+        "name": "Test http call to Wiremock",
+        "status": "passed",
+        "duration": 1443,
+        "start": 1747383736803,
+        "stop": 1747383738246,
+        "tags": [
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.HttpApiTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      },
+      {
+        "name": "Create and remove single deal limit",
+        "status": "passed",
+        "duration": 460,
+        "start": 1747383738331,
+        "stop": 1747383738791,
+        "tags": [
+          "ads-mp-mock-grpc-server",
+          "smoke"
+        ],
+        "filepath": "com.example.smoke.MockServiceTest",
+        "threadId": "ForkJoinPool-1-worker-1"
+      }
+    ],
+    "environment": {
+      "buildName": "Acceptance",
+      "buildNumber": "289",
+      "buildUrl": "https://github.com/example/ad-serving-automation/actions/runs/15063985558",
+      "commit": "aca3ec743f3de6d7ebcabd2e6635a9271a1b9428",
+      "branchName": "126/merge"
+    }
+  }
+}

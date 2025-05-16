@@ -1,0 +1,27 @@
+{
+  "reportFormat": "CTRF",
+  "specVersion": "0.0.0",
+  "results": {
+    "tool": {
+      "name": "JUnit"
+    },
+    "summary": {
+      "tests": 0,
+      "passed": 0,
+      "failed": 0,
+      "pending": 0,
+      "skipped": 0,
+      "other": 0,
+      "start": 1747358134684,
+      "stop": 1747358137016
+    },
+    "tests": [],
+    "environment": {
+      "buildName": "Acceptance",
+      "buildNumber": "285",
+      "buildUrl": "https://github.com/example/ad-serving-automation/actions/runs/15058436351",
+      "commit": "005fcd68cb9d2fe73275518280b61bc7c636651c",
+      "branchName": "126/merge"
+    }
+  }
+}
