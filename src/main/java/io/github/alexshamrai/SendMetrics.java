@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.alexshamrai.ctrf.model.CtrfJson;
 import io.github.alexshamrai.ctrf.model.Environment;
@@ -20,10 +22,14 @@ import io.github.alexshamrai.ctrf.model.Summary;
 
 public class SendMetrics {
     // private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
-    private static final String REPORT_PATH = "src/main/resources/ctrf-rep1.json";
+    private static final String REPORT_PATH = "src/main/resources/ctrf-rep5.json";
     private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
                                                     LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
                                                     "/_doc";
+
+    // private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
+    //                                                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
+    //                                                 "/_doc?timestamp=" + System.currentTimeMillis();
 
     public static void main(String[] args) {
         try {
@@ -62,22 +68,18 @@ public class SendMetrics {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonPayload = objectMapper.writeValueAsString(data);
 
-        // Create HTTP client
         HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-        // Create HTTP request
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create(ELASTICSEARCH_URL))
             .header("Content-Type", "application/json; charset=UTF-8")
             .POST(HttpRequest.BodyPublishers.ofString(jsonPayload, StandardCharsets.UTF_8))
             .build();
 
-        // Send request and get response
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // Check response status
         int statusCode = response.statusCode();
         if (statusCode != 200 && statusCode != 201) {
             throw new IOException("Failed to send data to Elasticsearch, HTTP error code: " + statusCode + response.body());

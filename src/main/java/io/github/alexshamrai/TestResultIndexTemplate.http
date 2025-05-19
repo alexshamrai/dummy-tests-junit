@@ -1,4 +1,8 @@
-curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-Type: application/json" -d '{
+### Create Index Template for Test Results
+PUT http://localhost:9200/_template/test_results_template
+Content-Type: application/json
+
+{
   "index_patterns": ["test_results*"],
   "settings": {
     "number_of_shards": 1,
@@ -76,9 +80,19 @@ curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-
               "classname": {"type": "keyword"},
               "package": {"type": "keyword"}
             }
+          },
+          "environment": {
+            "type": "object",
+            "properties": {
+              "buildName": {"type": "keyword"},
+              "buildNumber": {"type": "keyword"},
+              "buildUrl": {"type": "keyword"},
+              "commit": {"type": "keyword"},
+              "branchName": {"type": "keyword"}
+            }
           }
         }
       }
     }
   }
-}'
+}
