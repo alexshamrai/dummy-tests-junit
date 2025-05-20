@@ -1,0 +1,195 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "title": "Avg Test Duration per Test Name (Table View)",
+  "padding": 5,
+
+  "data": [
+    {
+      "name": "test_stats",
+      "url": {
+        "%context%": true,
+        "%timefield%": "results.summary.start",
+        "index": "ad-serving-automation-*",
+        "body": {
+          "size": 0,
+          "aggs": {
+            "tests_nested": {
+              "nested": {
+                "path": "results.tests"
+              },
+              "aggs": {
+                "by_test_name": {
+                  "terms": {
+                    "field": "results.tests.name",
+                    "size": 20
+                  },
+                  "aggs": {
+                    "avg_duration": {
+                      "avg": {
+                        "field": "results.tests.duration"
+                      }
+                    },
+                    "min_duration": {
+                      "min": {
+                        "field": "results.tests.duration"
+                      }
+                    },
+                    "max_duration": {
+                      "max": {
+                        "field": "results.tests.duration"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "property": "aggregations.tests_nested.by_test_name.buckets"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "avg",
+          "expr": "datum.avg_duration && datum.avg_duration.value != null ? datum.avg_duration.value : null"
+        },
+        {
+          "type": "formula",
+          "as": "min",
+          "expr": "datum.min_duration && datum.min_duration.value != null ? datum.min_duration.value : null"
+        },
+        {
+          "type": "formula",
+          "as": "max",
+          "expr": "datum.max_duration && datum.max_duration.value != null ? datum.max_duration.value : null"
+        },
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    // Column headers
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 0 },
+          "text": { "value": "Test Name" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "value": 0 },
+          "text": { "value": "Avg Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 680 },
+          "y": { "value": 0 },
+          "text": { "value": "Min Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 860 },
+          "y": { "value": 0 },
+          "text": { "value": "Max Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+
+    // Data rows — Test Name column
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "field": "key" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    // Data rows — Avg Duration column
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.avg, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    // Data rows — Min Duration column
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 680 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.min, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    // Data rows — Max Duration column
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 860 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.max, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    }
+  ]
+}
