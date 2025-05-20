@@ -42,8 +42,7 @@ Content-Type: application/json
               "stop": {
                 "type": "date",
                 "format": "epoch_millis"
-              },
-              "duration": {"type": "integer"}
+              }
             }
           },
           "tests": {
