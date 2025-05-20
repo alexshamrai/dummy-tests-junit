@@ -1,9 +1,9 @@
 ### Create Index Template for Test Results
-PUT http://localhost:9200/_template/test_results_template
+PUT http://localhost:9200/_template/ad-serving-automation_template
 Content-Type: application/json
 
 {
-  "index_patterns": ["test_results*"],
+  "index_patterns": ["ad-serving-automation*"],
   "settings": {
     "number_of_shards": 1,
     "number_of_replicas": 0,

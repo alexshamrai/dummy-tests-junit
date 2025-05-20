@@ -2,7 +2,6 @@ package io.github.alexshamrai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -13,37 +12,31 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.github.alexshamrai.ctrf.model.CtrfJson;
-import io.github.alexshamrai.ctrf.model.Environment;
-import io.github.alexshamrai.ctrf.model.Summary;
 
 public class SendMetrics {
-    // private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
-    private static final String REPORT_PATH = "src/main/resources/ctrf-rep5.json";
-    private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
+
+    private static final String REPORT_PATH = "build/test-results/test/ctrf-report.json";
+    private static final String REPORT_PATH_MASK = "src/main/resources/ctrf-rep";
+    private static final String ELASTICSEARCH_URL = "http://localhost:9200/ad-serving-automation-" +
                                                     LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
                                                     "/_doc";
 
-    // private static final String ELASTICSEARCH_URL = "http://localhost:9200/test_results-" +
-    //                                                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +
-    //                                                 "/_doc?timestamp=" + System.currentTimeMillis();
-
     public static void main(String[] args) {
+        // var reportPath = REPORT_PATH;
+        // readCtrfReportAndSendResultToElastic(reportPath);
+
+        for (int i = 1; i <= 10; i++) {
+            String reportPath = REPORT_PATH_MASK + i + ".json";
+            readCtrfReportAndSendResultToElastic(reportPath);
+        }
+    }
+
+    private static void readCtrfReportAndSendResultToElastic(String reportPath) {
         try {
-            File reportFile = new File(REPORT_PATH);
-            if (!reportFile.exists()) {
-                System.err.println("Report file not found: " + REPORT_PATH);
-                System.exit(1);
-            }
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            CtrfJson report = objectMapper.readValue(reportFile, CtrfJson.class);
-
-            sendToElasticsearch(report);
-
+            CtrfJson report = readReportFromFile(reportPath);
+            sendJsonToElasticsearch(report);
             System.out.println("Test report sent to Elasticsearch successfully.");
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -52,16 +45,16 @@ public class SendMetrics {
         }
     }
 
-    private static void sendToElasticsearch(Summary summary) throws IOException, InterruptedException {
-        sendJsonToElasticsearch(summary);
-    }
+    private static CtrfJson readReportFromFile(String reportPath) throws IOException {
+        File reportFile = new File(reportPath);
+        if (!reportFile.exists()) {
+            System.err.println("Report file not found: " + REPORT_PATH);
+            System.exit(1);
+        }
 
-    private static void sendToElasticsearch(CtrfJson report) throws IOException, InterruptedException {
-        sendJsonToElasticsearch(report);
-    }
-
-    private static void sendToElasticsearch(Environment environment) throws IOException, InterruptedException {
-        sendJsonToElasticsearch(environment);
+        ObjectMapper objectMapper = new ObjectMapper();
+        CtrfJson report = objectMapper.readValue(reportFile, CtrfJson.class);
+        return report;
     }
 
     private static void sendJsonToElasticsearch(Object data) throws IOException, InterruptedException {

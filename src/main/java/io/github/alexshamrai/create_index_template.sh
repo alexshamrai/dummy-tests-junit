@@ -1,5 +1,5 @@
-curl -X PUT "http://localhost:9200/_template/test_results_template" -H "Content-Type: application/json" -d '{
-  "index_patterns": ["test_results*"],
+curl -X PUT "http://localhost:9200/_template/ad-serving-automation_template" -H "Content-Type: application/json" -d '{
+  "index_patterns": ["ad-serving-automation*"],
   "settings": {
     "number_of_shards": 1,
     "number_of_replicas": 0,
