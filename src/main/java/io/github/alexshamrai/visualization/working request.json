@@ -1,0 +1,36 @@
+GET ad-serving-automation-*/_search
+{
+  "size": 0,
+  "aggs": {
+    "tests_nested": {
+      "nested": {
+        "path": "results.tests"
+      },
+      "aggs": {
+        "by_test_name": {
+          "terms": {
+            "field": "results.tests.name",
+            "size": 1000
+          },
+          "aggs": {
+            "min_duration": {
+              "min": {
+                "field": "results.tests.duration"
+              }
+            },
+            "max_duration": {
+              "max": {
+                "field": "results.tests.duration"
+              }
+            },
+            "avg_duration": {
+              "avg": {
+                "field": "results.tests.duration"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

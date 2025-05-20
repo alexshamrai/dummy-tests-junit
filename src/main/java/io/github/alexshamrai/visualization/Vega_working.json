@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "title": "Avg Test Duration per Test Name",
+  "width": 800,
+  "height": 400,
+  "padding": 5,
+
+  "data": [
+    {
+      "name": "test_stats",
+      "url": {
+        "%context%": true,
+        "%timefield%": "results.summary.start",
+        "index": "ad-serving-automation-*",
+        "body": {
+          "size": 0,
+          "aggs": {
+            "tests_nested": {
+              "nested": {
+                "path": "results.tests"
+              },
+              "aggs": {
+                "by_test_name": {
+                  "terms": {
+                    "field": "results.tests.name",
+                    "size": 20
+                  },
+                  "aggs": {
+                    "avg_duration": {
+                      "avg": {
+                        "field": "results.tests.duration"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "property": "aggregations.tests_nested.by_test_name.buckets"
+      }
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "xscale",
+      "type": "band",
+      "domain": {"data": "test_stats", "field": "key"},
+      "range": "width",
+      "padding": 0.1
+    },
+    {
+      "name": "yscale",
+      "domain": {"data": "test_stats", "field": "avg_duration.value"},
+      "nice": true,
+      "range": "height"
+    }
+  ],
+
+  "axes": [
+    { "orient": "bottom", "scale": "xscale", "labelAngle": -45 },
+    { "orient": "left", "scale": "yscale", "title": "Avg Duration (ms)" }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "test_stats"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "xscale", "field": "key"},
+          "width": {"scale": "xscale", "band": 1},
+          "y": {"scale": "yscale", "field": "avg_duration.value"},
+          "y2": {"scale": "yscale", "value": 0},
+          "fill": {"value": "#4c78a8"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "test_stats"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "xscale", "field": "key", "offset": 5},
+          "y": {"scale": "yscale", "field": "avg_duration.value", "offset": -5},
+          "text": {"field": "avg_duration.value", "format": ".0f"},
+          "angle": {"value": 0},
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fill": {"value": "black"},
+          "fontSize": {"value": 10}
+        }
+      }
+    }
+  ]
+}
