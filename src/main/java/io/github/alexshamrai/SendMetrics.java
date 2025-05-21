@@ -27,7 +27,7 @@ public class SendMetrics {
         // var reportPath = REPORT_PATH;
         // readCtrfReportAndSendResultToElastic(reportPath);
 
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 15; i++) {
             String reportPath = REPORT_PATH_MASK + i + ".json";
             readCtrfReportAndSendResultToElastic(reportPath);
         }

@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v4.json",
-  "title": "Regression - Success Rate",
+  "title": "Success Rate Table",
   "padding": 5,
   "data": [
     {
@@ -64,6 +64,7 @@
     }
   ],
   "marks": [
+    // Header Row
     {
       "type": "text",
       "encode": {
@@ -119,6 +120,44 @@
         }
       }
     },
+    // Column Dividers
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 480 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 670 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 850 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    // Data Rows
     {
       "type": "text",
       "from": { "data": "test_stats" },
