@@ -1,0 +1,178 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "title": "Regression - Success Rate",
+  "padding": 5,
+  "data": [
+    {
+      "name": "test_stats",
+      "url": {
+        "%context%": true,
+        "%timefield%": "results.summary.stop",
+        "index": "ad-serving-automation-*",
+        "body": {
+          "size": 0,
+          "aggs": {
+            "tests_nested": {
+              "nested": { "path": "results.tests" },
+              "aggs": {
+                "by_test_name": {
+                  "terms": {
+                    "field": "results.tests.name",
+                    "size": 200
+                  },
+                  "aggs": {
+                    "total_runs": {
+                      "value_count": { "field": "results.tests.name" }
+                    },
+                    "success_runs": {
+                      "filter": {
+                        "term": { "results.tests.status": "passed" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "property": "aggregations.tests_nested.by_test_name.buckets"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "total_runs",
+          "expr": "datum.total_runs && datum.total_runs.value != null ? datum.total_runs.value : 0"
+        },
+        {
+          "type": "formula",
+          "as": "success_runs",
+          "expr": "datum.success_runs && datum.success_runs.doc_count ? datum.success_runs.doc_count : 0"
+        },
+        {
+          "type": "formula",
+          "as": "success_rate",
+          "expr": "datum.total_runs > 0 ? (datum.success_runs / datum.total_runs) * 100 : 0"
+        },
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 0 },
+          "text": { "value": "Test Name" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "value": 0 },
+          "text": { "value": "Total Runs" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 700 },
+          "y": { "value": 0 },
+          "text": { "value": "Success Runs" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 900 },
+          "y": { "value": 0 },
+          "text": { "value": "Success Rate (%)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "field": "key" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "datum.total_runs" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 700 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "datum.success_runs" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 900 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.success_rate, '0.1f') + '%'" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    }
+  ]
+}
