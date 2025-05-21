@@ -1,38 +1,19 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v4.json",
-  "title": "Regression - Test Duration(last 30 days)",
+  "title": "Test Duration Table View",
   "padding": 5,
   "data": [
     {
       "name": "test_stats",
       "url": {
+        "%context%": true,
+        "%timefield%": "results.summary.stop",
         "index": "ad-serving-automation-*",
         "body": {
           "size": 0,
-          "query": {
-            "bool": {
-              "filter": [
-                {
-                  "term": {
-                    "results.environment.buildName": "Regression"
-                  }
-                },
-                {
-                  "range": {
-                    "results.summary.stop": {
-                      "gte": "now-30d",
-                      "lte": "now"
-                    }
-                  }
-                }
-              ]
-            }
-          },
           "aggs": {
             "tests_nested": {
-              "nested": {
-                "path": "results.tests"
-              },
+              "nested": { "path": "results.tests" },
               "aggs": {
                 "by_test_name": {
                   "terms": {
@@ -41,24 +22,16 @@
                   },
                   "aggs": {
                     "test_count": {
-                      "value_count": {
-                        "field": "results.tests.name"
-                      }
+                      "value_count": { "field": "results.tests.name" }
                     },
                     "avg_duration": {
-                      "avg": {
-                        "field": "results.tests.duration"
-                      }
+                      "avg": { "field": "results.tests.duration" }
                     },
                     "min_duration": {
-                      "min": {
-                        "field": "results.tests.duration"
-                      }
+                      "min": { "field": "results.tests.duration" }
                     },
                     "max_duration": {
-                      "max": {
-                        "field": "results.tests.duration"
-                      }
+                      "max": { "field": "results.tests.duration" }
                     }
                   }
                 }
@@ -92,6 +65,21 @@
           "expr": "datum.max_duration && datum.max_duration.value != null ? datum.max_duration.value : null"
         },
         {
+          "type": "formula",
+          "as": "avg_formatted",
+          "expr": "datum.avg != null ? floor(datum.avg / 60000) + 'm ' + (round((datum.avg % 60000) / 1000)) + 's (' + format(datum.avg, '.0f') + 'ms)' : null"
+        },
+        {
+          "type": "formula",
+          "as": "min_formatted",
+          "expr": "datum.min != null ? floor(datum.min / 60000) + 'm ' + (round((datum.min % 60000) / 1000)) + 's (' + format(datum.min, '.0f') + 'ms)' : null"
+        },
+        {
+          "type": "formula",
+          "as": "max_formatted",
+          "expr": "datum.max != null ? floor(datum.max / 60000) + 'm ' + (round((datum.max % 60000) / 1000)) + 's (' + format(datum.max, '.0f') + 'ms)' : null"
+        },
+        {
           "type": "window",
           "ops": ["row_number"],
           "as": ["row_number"]
@@ -119,7 +107,7 @@
         "enter": {
           "x": { "value": 500 },
           "y": { "value": 0 },
-          "text": { "value": "Avg Duration (ms)" },
+          "text": { "value": "Avg Duration" },
           "fontWeight": { "value": "bold" },
           "fontSize": { "value": 16 },
           "baseline": { "value": "top" },
@@ -133,7 +121,7 @@
         "enter": {
           "x": { "value": 680 },
           "y": { "value": 0 },
-          "text": { "value": "Min Duration (ms)" },
+          "text": { "value": "Min Duration" },
           "fontWeight": { "value": "bold" },
           "fontSize": { "value": 16 },
           "baseline": { "value": "top" },
@@ -147,7 +135,7 @@
         "enter": {
           "x": { "value": 860 },
           "y": { "value": 0 },
-          "text": { "value": "Max Duration (ms)" },
+          "text": { "value": "Max Duration" },
           "fontWeight": { "value": "bold" },
           "fontSize": { "value": 16 },
           "baseline": { "value": "top" },
@@ -166,6 +154,54 @@
           "fontSize": { "value": 16 },
           "baseline": { "value": "top" },
           "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 480 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 670 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 850 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
+        }
+      }
+    },
+    {
+      "type": "rule",
+      "encode": {
+        "enter": {
+          "x": { "value": 1030 },
+          "y": { "value": 0 },
+          "y2": { "signal": "height" },
+          "strokeWidth": { "value": 1 },
+          "stroke": { "value": "#ccc" }
         }
       }
     },
@@ -189,7 +225,7 @@
         "enter": {
           "x": { "value": 500 },
           "y": { "signal": "20 + datum.row_number * 20" },
-          "text": { "signal": "format(datum.avg, '.0f')" },
+          "text": { "field": "avg_formatted" },
           "fontSize": { "value": 14 },
           "baseline": { "value": "top" },
           "align": { "value": "left" }
@@ -203,7 +239,7 @@
         "enter": {
           "x": { "value": 680 },
           "y": { "signal": "20 + datum.row_number * 20" },
-          "text": { "signal": "format(datum.min, '.0f')" },
+          "text": { "field": "min_formatted" },
           "fontSize": { "value": 14 },
           "baseline": { "value": "top" },
           "align": { "value": "left" }
@@ -217,7 +253,7 @@
         "enter": {
           "x": { "value": 860 },
           "y": { "signal": "20 + datum.row_number * 20" },
-          "text": { "signal": "format(datum.max, '.0f')" },
+          "text": { "field": "max_formatted" },
           "fontSize": { "value": 14 },
           "baseline": { "value": "top" },
           "align": { "value": "left" }
