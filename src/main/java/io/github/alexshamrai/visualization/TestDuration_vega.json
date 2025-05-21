@@ -1,0 +1,242 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "title": "Regression - Test Duration(last 30 days)",
+  "padding": 5,
+  "data": [
+    {
+      "name": "test_stats",
+      "url": {
+        "index": "ad-serving-automation-*",
+        "body": {
+          "size": 0,
+          "query": {
+            "bool": {
+              "filter": [
+                {
+                  "term": {
+                    "results.environment.buildName": "Regression"
+                  }
+                },
+                {
+                  "range": {
+                    "results.summary.stop": {
+                      "gte": "now-30d",
+                      "lte": "now"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "aggs": {
+            "tests_nested": {
+              "nested": {
+                "path": "results.tests"
+              },
+              "aggs": {
+                "by_test_name": {
+                  "terms": {
+                    "field": "results.tests.name",
+                    "size": 200
+                  },
+                  "aggs": {
+                    "test_count": {
+                      "value_count": {
+                        "field": "results.tests.name"
+                      }
+                    },
+                    "avg_duration": {
+                      "avg": {
+                        "field": "results.tests.duration"
+                      }
+                    },
+                    "min_duration": {
+                      "min": {
+                        "field": "results.tests.duration"
+                      }
+                    },
+                    "max_duration": {
+                      "max": {
+                        "field": "results.tests.duration"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "format": {
+        "property": "aggregations.tests_nested.by_test_name.buckets"
+      },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "runs_count",
+          "expr": "datum.test_count && datum.test_count.value != null ? datum.test_count.value : null"
+        },
+        {
+          "type": "formula",
+          "as": "avg",
+          "expr": "datum.avg_duration && datum.avg_duration.value != null ? datum.avg_duration.value : null"
+        },
+        {
+          "type": "formula",
+          "as": "min",
+          "expr": "datum.min_duration && datum.min_duration.value != null ? datum.min_duration.value : null"
+        },
+        {
+          "type": "formula",
+          "as": "max",
+          "expr": "datum.max_duration && datum.max_duration.value != null ? datum.max_duration.value : null"
+        },
+        {
+          "type": "window",
+          "ops": ["row_number"],
+          "as": ["row_number"]
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "value": 0 },
+          "text": { "value": "Test Name" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "value": 0 },
+          "text": { "value": "Avg Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 680 },
+          "y": { "value": 0 },
+          "text": { "value": "Min Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 860 },
+          "y": { "value": 0 },
+          "text": { "value": "Max Duration (ms)" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": { "value": 1040 },
+          "y": { "value": 0 },
+          "text": { "value": "Runs Count" },
+          "fontWeight": { "value": "bold" },
+          "fontSize": { "value": 16 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 0 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "field": "key" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 500 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.avg, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 680 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.min, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 860 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.max, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": { "data": "test_stats" },
+      "encode": {
+        "enter": {
+          "x": { "value": 1040 },
+          "y": { "signal": "20 + datum.row_number * 20" },
+          "text": { "signal": "format(datum.runs_count, '.0f')" },
+          "fontSize": { "value": 14 },
+          "baseline": { "value": "top" },
+          "align": { "value": "left" }
+        }
+      }
+    }
+  ]
+}
