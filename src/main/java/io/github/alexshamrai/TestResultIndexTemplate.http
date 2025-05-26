@@ -1,4 +1,4 @@
-### Create Index Template for Test Results
+### Update Index Template for Test Results to Ignore Unknown Fields
 PUT http://localhost:9200/_template/ad-serving-automation_template
 Content-Type: application/json
 
@@ -11,7 +11,7 @@ Content-Type: application/json
     "index.mapping.total_fields.limit": 2000
   },
   "mappings": {
-    "dynamic": "strict",
+    "dynamic": true,
     "date_detection": false,
     "properties": {
       "reportFormat": {"type": "keyword"},
@@ -48,7 +48,6 @@ Content-Type: application/json
           "tests": {
             "type": "nested",
             "include_in_parent": true,
-            "dynamic": "strict",
             "properties": {
               "name": {"type": "keyword"},
               "status": {"type": "keyword"},
@@ -77,7 +76,9 @@ Content-Type: application/json
               "filepath": {"type": "keyword"},
               "threadId": {"type": "keyword"},
               "classname": {"type": "keyword"},
-              "package": {"type": "keyword"}
+              "package": {"type": "keyword"},
+              "retries": {"type": "integer"},
+              "flaky": {"type": "boolean"}
             }
           },
           "environment": {
