@@ -1,0 +1,32 @@
+@apiKey = set_api_key
+@namespace = test-automation
+@dataViewTitle = ad-serving-automation
+@dataViewId = set_here_dataview_id
+
+### Get Data View by Title
+GET http://localhost:5601/s/{{namespace}}/api/saved_objects/_find?type=index-pattern&search_fields=title&search={{dataViewTitle}}&per_page=10
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+kbn-xsrf: true
+
+### Get Data View by ID (replace data_view_id with the actual ID from the previous request)
+GET http://localhost:5601/s/{{namespace}}/api/saved_objects/index-pattern/{{dataViewId}}
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+kbn-xsrf: true
+
+### Export Data View (replace data_view_id with the actual ID)
+POST http://localhost:5601/s/{{namespace}}/api/saved_objects/_export
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+kbn-xsrf: true
+
+{
+  "objects": [
+    {
+      "type": "index-pattern",
+      "id": "{{dataViewId}}"
+    }
+  ],
+  "includeReferencesDeep": true
+}

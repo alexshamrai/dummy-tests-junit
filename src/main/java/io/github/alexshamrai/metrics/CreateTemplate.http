@@ -1,0 +1,139 @@
+@apiKey = set_api_key
+
+### Step 1: Create Component Template for Settings
+PUT http://localhost:9200/_component_template/ad-serving-automation-settings
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+
+{
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "mapping.nested_objects.limit": 100,
+      "index.mapping.total_fields.limit": 2000
+    }
+  }
+}
+
+### Step 2: Create Component Template for Mappings with a Runtime Field
+PUT http://localhost:9200/_component_template/ad-serving-automation-mappings
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+
+{
+  "template": {
+    "mappings": {
+      "dynamic": true,
+      "date_detection": false,
+      "properties": {
+        "reportFormat": {"type": "keyword"},
+        "specVersion": {"type": "keyword"},
+        "results": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "object",
+              "properties": {
+                "name": {"type": "keyword"},
+                "version": {"type": "keyword"}
+              }
+            },
+            "summary": {
+              "type": "object",
+              "properties": {
+                "tests": {"type": "integer"},
+                "passed": {"type": "integer"},
+                "failed": {"type": "integer"},
+                "pending": {"type": "integer"},
+                "skipped": {"type": "integer"},
+                "other": {"type": "integer"},
+                "start": {
+                  "type": "date",
+                  "format": "epoch_millis"
+                },
+                "stop": {
+                  "type": "date",
+                  "format": "epoch_millis"
+                }
+              }
+            },
+            "tests": {
+              "type": "nested",
+              "include_in_parent": true,
+              "properties": {
+                "name": {"type": "keyword"},
+                "status": {"type": "keyword"},
+                "duration": {"type": "integer"},
+                "start": {
+                  "type": "date",
+                  "format": "epoch_millis"
+                },
+                "stop": {
+                  "type": "date",
+                  "format": "epoch_millis"
+                },
+                "message": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {"type": "keyword", "ignore_above": 256}
+                  }
+                },
+                "trace": {
+                  "type": "text",
+                  "fields": {
+                    "keyword": {"type": "keyword", "ignore_above": 256}
+                  }
+                },
+                "tags": {"type": "keyword"},
+                "filepath": {"type": "keyword"},
+                "threadId": {"type": "keyword"},
+                "classname": {"type": "keyword"},
+                "package": {"type": "keyword"},
+                "retries": {"type": "integer"},
+                "flaky": {"type": "boolean"}
+              }
+            },
+            "environment": {
+              "type": "object",
+              "properties": {
+                "buildName": {"type": "keyword"},
+                "buildNumber": {"type": "keyword"},
+                "buildUrl": {"type": "keyword"},
+                "commit": {"type": "keyword"},
+                "branchName": {"type": "keyword"}
+              }
+            }
+          }
+        }
+      },
+      "runtime": {
+        "results.summary.duration": {
+          "type": "long",
+          "script": {
+            "source": "emit(doc['results.summary.stop'].value.toInstant().toEpochMilli() - doc['results.summary.start'].value.toInstant().toEpochMilli());"
+          }
+        }
+      }
+    }
+  }
+}
+
+### Step 3: Create Composable Index Template
+PUT http://localhost:9200/_index_template/ad-serving-automation-template
+Content-Type: application/json
+Authorization: ApiKey {{apiKey}}
+
+{
+  "index_patterns": ["ad-serving-automation*"],
+  "priority": 100,
+  "composed_of": [
+    "ad-serving-automation-settings",
+    "ad-serving-automation-mappings"
+  ],
+  "template": {
+    "settings": {
+      "mapping.nested_objects.limit": 100
+    }
+  }
+}

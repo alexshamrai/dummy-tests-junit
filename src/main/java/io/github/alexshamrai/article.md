@@ -1,8 +1,11 @@
 # Test Automation Metrics in Elasticsearch and Kibana
 
-This article explains how to set up test automation metrics collection in Elasticsearch and Kibana for any Java Gradle project that uses CTRF (Common Test Report Format) reporting. By following these steps, you'll be able to:
+This article explains how to set up test automation metrics collection in Elasticsearch and Kibana for any Java Gradle project.
+CTRF is used to have a JSON with test run results, and this JSON is being sent to the Elasticsearch index as a document.
+The approach described
 
-1. Send CTRF test reports to Elasticsearch
+By following these steps, you'll be able to:
+1. Send test reports to Elasticsearch
 2. Set up Elasticsearch with the proper index templates
 3. Configure Kibana dashboards for visualizing test metrics
 

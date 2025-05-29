@@ -1,0 +1,15 @@
+@apiKey = set_api_key
+@namespace = test-automation
+
+### Import Data View
+POST http://localhost:5601/s/{{namespace}}/api/saved_objects/_import?overwrite=true
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: ApiKey {{apiKey}}
+kbn-xsrf: true
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="data_view_export.ndjson"
+Content-Type: application/ndjson
+
+< ./data_view_export.ndjson
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
